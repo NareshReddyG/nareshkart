@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Payment Options";
+}
+
+<h2 class="regFormTitle margin-top-20">Payment Options</h2>
+
+<div class="container" style="width: 70%">
+    <div class="row">
+        <div class="row">
+            <div class="col-md-6 margin-top-05">
+                <label class="fieldLabel">Client Side Script Pay</label>
+            </div>
+
+            <div class="col-md-6 margin-top-05">
+                <label class="fieldLabel">Server Pay</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-6 margin-top-10 padding-left-0">
+            <input type="submit" value="Process" title="Client Side script pay" class="btn btn-primary" onclick="routeToClientPayOrServerPay('client')" />
+        </div>
+        <div class="col-md-6 col-sm-6 margin-top-10">
+            <input type="submit" value="Process" title="Server Pay" class="btn btn-primary" onclick="routeToClientPayOrServerPay('serverpay')" />
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function routeToClientPayOrServerPay(isFrom) {
+        var amount;
+        var quantity = GetQueryStringValueByParameter('quantity');
+        var itemId = GetQueryStringValueByParameter('itemId');
+        var itemCost = GetQueryStringValueByParameter('itemCost');
+        var shipmentTransactionId = GetQueryStringValueByParameter('shipmentTransactionId');
+        if (quantity == null || itemCost == null || isNaN(quantity) || isNaN(itemCost)) {
+            alert("Something went wrong with quantity and cost. So, default(for testing - 1) amount become your payment.If you have any queries contact +91-8870599805");
+            amount = 10;
+        } else {
+            amount = quantity * itemCost;
+        }
+        if (isFrom == 'client') {
+            window.location.href = '@Url.Action("Index", "ClientSidePayment")?amount=' + amount;
+        }
+        if (isFrom == 'serverpay') {
+            window.location.href = '@Url.Action("PaymentWithPayPal", "PaypalServer")?amount=' + amount +'&shipmentTransactionId='+shipmentTransactionId
+        }
+    }
+</script>

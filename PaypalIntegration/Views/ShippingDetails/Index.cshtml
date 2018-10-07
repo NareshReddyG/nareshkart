@@ -1,0 +1,99 @@
+﻿@model PaypalIntegration.DTO.ShippingDetailsDTO
+@{
+    ViewBag.Title = "Shipping Details";
+}
+<div class="border-1-solid-black">
+    <div style="text-align: right;padding-right: 266px;" class="border-1-solid-black">
+        @{
+            var totalCost = @Model.ItemDetails.ItemCost * @Model.ItemDetails.Quantity;
+        }
+        <h3>Total Amount(Item Price * Quantity): $ @totalCost</h3>
+    </div>
+    <div class="border-1-solid-black">
+        <h2 class="regFormTitle margin-top-20">Shipping Details</h2>
+        @using (Html.BeginForm("SaveShippingDetails", "ShippingDetails", FormMethod.Post, new { id = "ShippingDetails" }))
+        {
+            <div class="container" style="width: 70%">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">First Name: <span class="star">*</span></label>
+                            @Html.EditorFor(x => x.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter First Name" } })
+                            @Html.ValidationMessageFor(x => x.FirstName)
+                        </div>
+
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Last Name:</label>
+                            @Html.EditorFor(x => x.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Last Name" } })
+                            @Html.ValidationMessageFor(x => x.LastName)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Email: <span class="star">*</span></label>
+                            @Html.EditorFor(x => x.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Email" } })
+                            @Html.ValidationMessageFor(x => x.Email)
+                        </div>
+
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Phone Number <span class="star">*</span></label>
+                            @Html.EditorFor(x => x.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Phone Number" } })
+                            @Html.ValidationMessageFor(x => x.PhoneNumber)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Shipping Address:<span class="star">*</span></label>
+                            @Html.TextAreaFor(x => x.Address, new { @class = "form-control", @placeholder = "Enter Shipping Address" })
+                            @Html.ValidationMessageFor(x => x.Address)
+                        </div>
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Country<span class="star">*</span></label>
+                            @Html.DropDownListFor(x => x.Country, new SelectList(Model.CountryList, "Value", "Text", Model.Country),
+                        new { @class = "form-control", @Id = "Country" })
+                            @Html.ValidationMessageFor(x => x.Country)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Street: <span class="star"></span></label>
+                            @Html.EditorFor(x => x.Street, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Street" } })
+                            @Html.ValidationMessageFor(x => x.Street)
+                        </div>
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Land Mark:</label>
+                            @Html.EditorFor(x => x.LandMark, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Land mark" } })
+                            @Html.ValidationMessageFor(x => x.LandMark)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">State: <span class="star">*</span></label>
+                            @Html.EditorFor(x => x.State, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter State" } })
+                            @Html.ValidationMessageFor(x => x.State)
+                        </div>
+                        <div class="col-md-6 margin-top-05">
+                            <label class="fieldLabel">Zip Code: <span class="star">*</span></label>
+                            @Html.EditorFor(x => x.Zip, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Zip Code" } })
+                            @Html.ValidationMessageFor(x => x.Zip)
+                        </div>
+                    </div>
+                    <div class="hidden">
+                        @Html.HiddenFor(x => x.ItemDetails.ItemCost)
+                        @Html.HiddenFor(x => x.ItemDetails.ItemId)
+                        @Html.HiddenFor(x => x.ItemDetails.Quantity)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="margin-top-10 margin-bottom-30 padding-right-100 float-right">
+                        <input type="submit" value="Ship" title="Submit" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

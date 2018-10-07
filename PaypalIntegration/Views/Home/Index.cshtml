@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row padding-top-40 hover-background-gray cursor-pointer">
+    <div class="col-md-3">
+        <img src="~/Content/Products/9E635B57-07CE-4D2E-8789-AA660D7405F8.jpg" class="height-225" alt="Eat That Frog By BRIAN TRACY" />
+    </div>
+    <div class="col-md-4">
+        <strong>Eat That Frog!: 21 Great Ways to Stop Procrastinating and Get More Done in Less Time</strong>
+        <div class="padding-top-10">Price: &#x24; 200</div>
+
+        <div class="form-group padding-top-10">
+            <label for="quantity">Quantity:</label>
+            <input type="number" class="form-control" id="item_quantity_1" min="1">
+        </div>
+        <div class="form-group padding-top-10">
+            <button type="button" class="btn btn-primary active" onclick="routeToAddress('9E635B57-07CE-4D2E-8789-AA660D7405F8',200,1);">Check Out</button>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row padding-top-40 hover-background-gray cursor-pointer">
+    <div class="col-md-3">
+        <img src="~/Content/Products/4E86F1B1-BC36-4DB7-BE34-77B970305664.jpg" class="height-225" alt="7 Habits of highly effective people" />
+    </div>
+    <div class="col-md-4">
+        <strong>The 7 Habits of Highly Effective People</strong>
+        <div class="padding-top-10">Price: &#x24; 150</div>
+
+        <div class="form-group padding-top-10">
+            <label for="quantity">Quantity:</label>
+            <input type="number" class="form-control" id="item_quantity_2" min="1">
+        </div>
+        <div class="form-group padding-top-10">
+            <button type="button" class="btn btn-primary active" onclick="routeToAddress('4E86F1B1-BC36-4DB7-BE34-77B970305664',150,2);">Check Out</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function calculateTotalCost(orderValue, quantity) {
+        if (validateQuantity(quantity)) {
+
+        }
+    }
+    function validateQuantity(quantity) {
+        if (isNaN(quantity)) {
+            alert("Strings are not allowed.Enter a valid number");
+            return false;
+        }
+        if (quantity <= 0) {
+            alert("Quantity has to be greater than or equal to 1");
+            return false;
+        }
+        return true;
+    }
+    function routeToAddress(itemid, orderValue, itemNumber) {
+        var itemQuantity = $("#item_quantity_" + itemNumber).val();
+        if (validateQuantity(itemQuantity)) {
+            var redirectToShippingAddress = '@Url.Action("GetShippingDetails", "ShippingDetails")?quantity=' + itemQuantity +
+                "&itemId=" + itemid + "&itemCost=" + orderValue;
+            window.location.href = redirectToShippingAddress;
+        }
+    }
+</script>

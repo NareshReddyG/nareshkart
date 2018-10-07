@@ -1,0 +1,93 @@
+﻿.fieldLabel {
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans","Arial","sans-serif";
+    font-size: 86%;
+    color: black;
+    margin: 5px 0px 5px 0px;
+    font-weight: bold;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans","Arial","sans-serif";
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+.height-225 {
+    height: 225px;
+}
+
+.padding-left-0 {
+    padding-left: 0px;
+}
+
+.padding-top-40 {
+    padding-top: 40px;
+}
+
+.padding-top-10 {
+    padding-top: 10px;
+}
+
+.padding-right-100 {
+    padding-right: 100px;
+}
+
+.hover-background-gray:hover {
+    background-color: #e9ebeb;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.margin-top-05 {
+    margin-top: 5px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.star {
+    color: red;
+}
+
+.margin-bottom-30 {
+    margin-bottom: 30px;
+}
+
+.regFormTitle {
+    margin-left: 158px;
+}
+
+.border-1-solid-black {
+    border: 1px solid #ddd;
+}
+
+.float-right {
+    float: right;
+}
