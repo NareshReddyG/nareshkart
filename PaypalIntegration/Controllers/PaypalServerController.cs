@@ -35,6 +35,7 @@ namespace PaypalIntegration.Controllers
                     var guid = Convert.ToString((new Random()).Next(100000));
 
                     var createdPayment = this.CreatePayment(apiContext, baseURI + "guid=" + guid, amount);
+                    
 
                     var links = createdPayment.links.GetEnumerator();
 
@@ -134,6 +135,7 @@ namespace PaypalIntegration.Controllers
             transaction.description = "Assignment in serverside program for paypal interview";
             transaction.item_list = itemList;
             transaction.invoice_number = "TestInvoiceNumber";
+
             List<Transaction> transactionList = new List<Transaction>();
             transactionList.Add(transaction);
             this.payment = new Payment()

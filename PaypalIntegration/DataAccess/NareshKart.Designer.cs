@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\Projects\Paypal\PaypalIntegration\PaypalIntegration\DataAccess\NareshKart.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\ngarivi\Documents\Integration Examples\Express Checkout\MVC\nareshkart-master\nareshkart-master\PaypalIntegration\DataAccess\NareshKart.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

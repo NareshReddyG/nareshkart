@@ -1,0 +1,258 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/Common/Utility.js"></script>
+<div class="margin-top-10">
+    <input type="hidden" id="hdnDoPaymentByReferenceId" />
+    <input type="submit" value="DoReferece Transacion" onclick="createBillingAgreementToken();" />
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Access Token Details</h5>
+            <pre class="card-text">
+            <code id="accessToken"> </code>
+            </pre>
+        </div>
+    </div>
+    <!--Crate Billing Agreements Token-->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Billing Agreements Token</h5>
+            <pre class="card-text">
+            <code id="billingAgreementsTokenResponse"> </code>
+            <pre>Billing Agreement Token:<code id="billingAgreementTokenValue"></code></pre>
+            </pre>
+        </div>
+    </div>
+    <!--Do Referece Transactions-->
+    <div>
+        <input type="hidden" id="billingAgreementToken" />
+        <button type="button" class="btn btn-primary" onClick="getBuyerConsignment();" disabled id="btnGetUserConsignment">Get the UserConsigment/Agreement</button>
+    </div>
+
+    <!-- Billing Agreement Details-->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Billing Agreement Detail</h5>
+            <pre class="card-text">
+            <code id="billingAgreementDetails"> </code>
+            <pre>Billing AgreementId:<code id="billingAgreementId"></code></pre>
+            </pre>
+        </div>
+    </div>
+
+    <div>
+
+        <button type="button" class="btn btn-primary" onClick="doPaymentByReferenceTransactionId();"
+                disabled
+                id="doPaymentByReferenceId">
+            Do Payment By Reference Id
+        </button>
+    </div>
+
+    <!-- Reference Transactions response-->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Reference transaction response</h5>
+            <pre class="card-text">
+            <code id="referenceTransactionResponse"> </code>
+            </pre>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    (function () {
+        if (window.location.href.indexOf('ba_token=') > 0) {
+            createBillingAgreement();
+            $("#billingAgreementTokenValue").text(GetQueryStringValueByParameter('ba_token'));
+        }
+
+    })();
+
+    function errorCallBack(obj) {
+        debugger;
+        console.log(JSON.stringify(obj));
+    }
+
+    function generateAccessToken() {
+        var token = "";
+        $.ajax({
+            type: "POSt",
+            url: "https://api.sandbox.paypal.com/v1/oauth2/token",
+            data: "grant_type=client_credentials",
+            async: false,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic QVZ1dVpyZzNqbjhRblNhZmE5cG5MY1oyeDhac2pYcngzbzlWRGx2RnpGZlhMUXRCdTZpQmhyNVltRkd2c2NxU05pT0JLOWJUdC1kUjM2Ylk6RUQybmdDZGJfaU1FRm9aNGlFOEhWMXVQQ1RTUXlKenUwWGJCbFd5amtuZzJscDBtSmVtbjc0RW52aVhhb1R4aGgtSTdORjhmcW15M2s1Z2w='
+            },
+            success: function (obj) {
+                console.log('token success');
+                $("#accessToken").text(JSON.stringify(obj));
+                token = obj.access_token;
+            },
+            error: errorCallBack,
+        });
+        return token;
+    }
+
+    var payerDetails = {
+        "description": "Billing Agreement",
+        "shipping_address":
+        {
+            "line1": "1350 North First Street",
+            "city": "San Jose",
+            "state": "CA",
+            "postal_code": "95112",
+            "country_code": "US",
+            "recipient_name": "Naresh Reddy"
+        },
+        "payer":
+        {
+            "payment_method": "PAYPAL"
+        },
+        "plan":
+        {
+            "type": "MERCHANT_INITIATED_BILLING",
+            "merchant_preferences":
+            {
+                "return_url": "http://localhost/PaypalIntegration/ReferenceTransactions",
+                "cancel_url": "http://localhost/PaypalIntegration/ReferenceTransactions",
+                "notify_url": "http://localhost/PaypalIntegration/ReferenceTransactions",
+                "accepted_pymt_type": "INSTANT",
+                "skip_shipping_address": false,
+                "immutable_shipping_address": true
+            }
+        }
+    };
+
+    function createBillingAgreementToken() {
+        var accessToken = generateAccessToken();
+        $.ajax({
+            type: "POSt",
+            url: "https://api.sandbox.paypal.com/v1/billing-agreements/agreement-tokens",
+            data: JSON.stringify(payerDetails),
+            async: false,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            success: oncreateBillingAgreementTokenSuccess,
+            error: errorCallBack
+        });
+    }
+
+    function oncreateBillingAgreementTokenSuccess(obj) {
+        $("#billingAgreementsTokenResponse").text(JSON.stringify(obj));
+        $("#billingAgreementToken").val(obj.links[0].href);
+        $("#billingAgreementTokenValue").text(obj.token_id);
+        $("#btnGetUserConsignment").removeAttr("disabled");
+    }
+
+    function getBuyerConsignment() {
+        window.location.href = $("#billingAgreementToken").val();
+    }
+
+    function createBillingAgreement() {
+        var token = generateAccessToken();
+        $.ajax({
+            type: "POSt",
+            url: "https://api.sandbox.paypal.com/v1/billing-agreements/agreements",
+            data: JSON.stringify({ "token_id": GetQueryStringValueByParameter('ba_token') }),
+            async: false,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            success: onCreateBillingAgreementSuccess,
+            error: errorCallBack
+        });
+    }
+
+    function onCreateBillingAgreementSuccess(obj) {
+        debugger;
+        console.log("Billing Agreement id :" + obj.id);
+        $("#billingAgreementDetails").text(JSON.stringify(obj));
+        $("#billingAgreementId").text(obj.id);
+        //referenceTransactionToMakeyPayment(obj.id);
+        // Set Billing Agreements Id
+        $("#doPaymentByReferenceId").removeAttr("disabled");
+        debugger;
+        $("#hdnDoPaymentByReferenceId").val(obj.id);
+        debugger;
+    }
+
+    function doPaymentByReferenceTransactionId() {
+        var token = generateAccessToken();
+        debugger;
+        var payer = {
+            "intent": "sale",
+            "payer":
+            {
+                "payment_method": "PAYPAL",
+                "funding_instruments": [
+                {
+                    "billing":
+                    {
+                        "billing_agreement_id": $("#hdnDoPaymentByReferenceId").val()
+                    }
+                }]
+            },
+            "transactions": [
+            {
+                "amount":
+                {
+                    "currency": "USD",
+                    "total": "2.00"
+                },
+                "description": "Payment transaction.",
+                "custom": "Payment custom field.",
+                "note_to_payee": "Note to payee field.",
+                "invoice_number": "GDAGDS5754YEK123" + Math.floor((Math.random() * 1000) + 1),
+                "item_list":
+                {
+                    "items": [
+                    {
+                        "sku": "skuitemNo1",
+                        "name": "ItemNo1",
+                        "description": "The item description.",
+                        "quantity": "2",
+                        "price": "1.00",
+                        "currency": "USD",
+                        "tax": "0",
+                        "url": "http://localhost/PaypalIntegration/ReferenceTransactions"
+                    }]
+                }
+            }],
+            "redirect_urls":
+            {
+                "return_url": "http://localhost/PaypalIntegration/ReferenceTransactions",
+                "cancel_url": "http://localhost/PaypalIntegration/ReferenceTransactions"
+            }
+        };
+
+        $.ajax({
+            type: "POSt",
+            url: "https://api.sandbox.paypal.com/v1/payments/payment",
+            data: JSON.stringify(payer),
+            async: false,
+            cache: false,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            success: ondoPaymentByReferenceTransactionIdSuccess,
+            error: errorCallBack
+        });
+    }
+
+    function ondoPaymentByReferenceTransactionIdSuccess(obj) {
+        $("#referenceTransactionResponse").text(JSON.stringify(obj));
+    }
+
+
+</script>
